@@ -1,1 +1,5 @@
 npm install --save-exact sass@1.42.1
+
+npm install --save-exact axios@0.23.0
+
+npm install --save-exact moment@2.29.1
