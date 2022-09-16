@@ -1,40 +1,23 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import useFetch from "../customize/fetch";
 import moment from "moment";
+import { useEffect, useState } from "react";
 
 const Covid = () => {
-  const [dataCovid, setDataCovid] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const priorDate = moment().subtract(30, "days");
 
-  useEffect(() => {
-    setTimeout(() => {
-      axios
-        .get(
-          "https://api.covid19api.com/country/vietnam?from=2021-10-01T00%3A00%3A00Z&to=2021-10-20T00%3A00%3A00Z"
-        )
-        .then((response) => {
-          let data = response && response.data ? response.data : [];
-          //   convert date
-          if (data && data.length > 0) {
-            data.map((item) => {
-              item.Date = moment(item.Date).format("DD/MM/YYYY");
-              return item;
-            });
-          }
-          setDataCovid(data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          // handle error
-          console.log(error);
-        });
-    }, 2000);
-  }, []);
+  const { data: dataCovid, isLoading, isErr } =
+    // = useFetch(
+    // "https://api.covid19api.com/country/vietnam?from=2021-10-01T00%3A00%3A00Z&to=2021-10-20T00%3A00%3A00Z"
+    // );
+    useFetch(
+      `https://api.covid19api.com/country/vietnam?from=${priorDate.toISOString()}&to=${today.toISOString()}`
+    );
+
   return (
     <>
       <h2>Covid 19 in Viet Nam</h2>
       <table>
-        {console.log("check data:", dataCovid)}
         <thead>
           <tr>
             <th>Date</th>
@@ -45,7 +28,8 @@ const Covid = () => {
           </tr>
         </thead>
         <tbody>
-          {loading === false &&
+          {isErr === false &&
+            isLoading === false &&
             dataCovid &&
             dataCovid.length > 0 &&
             dataCovid.map((item) => {
@@ -59,10 +43,17 @@ const Covid = () => {
                 </tr>
               );
             })}
-          {loading === true && (
+          {isLoading === true && (
             <tr>
               <td colSpan="5" style={{ textAlign: "center" }}>
                 Loading...
+              </td>
+            </tr>
+          )}
+          {isErr === true && (
+            <tr>
+              <td colSpan="5" style={{ textAlign: "center" }}>
+                Something Err...
               </td>
             </tr>
           )}

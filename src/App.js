@@ -4,6 +4,8 @@ import Nav from "./views/Nav";
 import { useState, useEffect } from "react";
 // import Todo from "./views/Todos";
 import Covid from "./views/Covid";
+import { CountDown, HookCountDown } from "./views/Countdown";
+
 function App() {
   // use Hook
   let [name, setName] = useState("Minh Long"); //name là giá trị của biến, setName là function xl khi biến thay đổi
@@ -41,6 +43,11 @@ function App() {
     curentTodo = curentTodo.filter((item) => item.id !== idTodo);
     setTodos(curentTodo);
   };
+
+  const onTimeUp = () => {
+    alert("Time up!!!");
+  };
+
   // hàm useEffect chạy mỗi khi giao diện render lại
   // có thể dùng nhìu hàm useEffect
   // chạy 1 lần khi address thay đổi
@@ -57,6 +64,9 @@ function App() {
       <Nav />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <CountDown onTimeUp={onTimeUp} />
+        <hr />
+        <HookCountDown onTimeUp={onTimeUp} />
         <p>
           Heloo {name}, toi {age} tuoi
         </p>
